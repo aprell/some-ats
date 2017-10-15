@@ -8,9 +8,7 @@ typedef point2D = @{x = double, y = double}
 typedef point3D = '{x = double, y = double, z = double}
 
 // Pattern matching on record values
-
 typedef person = @{name = string, age = int}
-
 fn person_name (@{name = name, ...} : person) = name
 fn person_age (@{age = age, ...} : person) = age
 

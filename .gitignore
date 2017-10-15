@@ -6,3 +6,4 @@ record
 factorial
 poly
 foreign
+datatype
