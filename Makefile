@@ -3,7 +3,7 @@ PATSCCFLAGS :=
 
 ##############################################################################
 
-PROGS := hello tuple record factorial poly foreign datatype
+PROGS := hello tuple record factorial poly foreign datatype misc
 
 tuple record factorial poly datatype: PATSCCFLAGS += -DATS_MEMALLOC_LIBC
 
