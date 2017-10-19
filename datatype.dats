@@ -29,7 +29,8 @@ datatype list (a : t@ype) =
   | list_nil
   | list_cons of (a, list a)
 
-fn {a : t@ype} list_length (lst : list a) : int =
+fn {a : t@ype}
+list_length (lst : list a) : int =
   let
     fun loop (lst : list a, acc : int) =
       case+ lst of
@@ -42,13 +43,55 @@ fn {a : t@ype} list_length (lst : list a) : int =
     loop (lst, 0)
   end
 
+fun {a : t@ype} {b : t@ype}
+list_map (f : a -> b, lst : list a) : list b =
+  case+ lst of
+  | list_nil () => list_nil
+  | list_cons (hd, tl) => f hd \list_cons list_map (f, tl)
+
+fun {a : t@ype} {b : t@ype}
+list_fold_left (f : (a, b) -> a, init : a, lst : list b) : a =
+  case+ lst of
+  | list_nil () => init
+  | list_cons (hd, tl) => list_fold_left (f, f (init, hd), tl)
+
+fun {a : t@ype} {b : t@ype}
+list_fold_right (f : (a, b) -> b, lst : list a, init : b) : b =
+  case+ lst of
+  | list_nil () => init
+  | list_cons (hd, tl) => f (hd, list_fold_right (f, tl, init))
+
+#define nil list_nil
+#define ::  list_cons
+
+fn {a : t@ype}
+list_reverse (lst : list a) : list a =
+  let fn flip_cons (xs : list a, x : a) = x :: xs in
+    list_fold_left<list a><a> (flip_cons, nil, lst)
+  end
+
+fn {a : t@ype}
+list_append (lst1 : list a, lst2 : list a) : list a =
+  let fn cons (x : a, xs : list a) = x :: xs in
+    list_fold_right<a><list a> (cons, lst1, lst2)
+  end
+
 fn test_list () =
   let
-    val empty = list_nil
-    val lst = list_cons (1, list_cons (2, list_cons (3, empty)))
+    val empty = nil
+    val xs = 1 :: 2 :: 3 :: empty
+    val ys = list_map<int>(*<int>*) (lam x => x + 3, xs)
+    val zs = list_reverse (list_append (xs, ys))
+    fn sum (lst : list int) : int =
+      list_fold_right<int><int> (lam (a, b) => a + b, lst, 0)
   in
     assertloc (list_length empty = 0);
-    assertloc (list_length lst = 3)
+    assertloc (list_length xs = 3);
+    assertloc (list_length ys = 3);
+    assertloc (list_length zs = 6);
+    assertloc (sum xs = 6);
+    assertloc (sum ys = 15);
+    assertloc (sum zs = 21)
   end
 
 datatype expr =
