@@ -3,9 +3,9 @@ PATSCCFLAGS :=
 
 ##############################################################################
 
-PROGS := hello tuple record factorial poly foreign datatype misc
+PROGS := hello tuple record factorial poly foreign datatype misc exn
 
-tuple record factorial poly datatype: PATSCCFLAGS += -DATS_MEMALLOC_LIBC
+tuple record factorial poly datatype exn: PATSCCFLAGS += -DATS_MEMALLOC_LIBC
 
 ##############################################################################
 
