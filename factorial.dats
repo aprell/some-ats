@@ -33,14 +33,14 @@ fn factorial'' (n : int) : int =
   end
 
 fn test (factorial : int -> int) =
-  ((* begin *)
-    assertloc (factorial 0 = 1);
-    assertloc (factorial 1 = 1);
-    assertloc (factorial 2 = 2);
-    assertloc (factorial 3 = 6);
-    assertloc (factorial 4 = 24);
-    assertloc (factorial 5 = 120)
-  (* end *))
+((* begin *)
+  assertloc (factorial 0 = 1);
+  assertloc (factorial 1 = 1);
+  assertloc (factorial 2 = 2);
+  assertloc (factorial 3 = 6);
+  assertloc (factorial 4 = 24);
+  assertloc (factorial 5 = 120)
+(* end *))
 
 fn mk_counter () =
   let
@@ -80,19 +80,19 @@ fn mk_factorial () =
 
 // The closure returned by mk_factorial cannot be passed to test
 fn test' (factorial : int -<cloref1> int) =
-  ((* begin *)
-    assertloc (factorial 0 = 1);
-    assertloc (factorial 1 = 1);
-    assertloc (factorial 2 = 2);
-    assertloc (factorial 3 = 6);
-    assertloc (factorial 4 = 24);
-    assertloc (factorial 5 = 120)
-  (* end *))
+((* begin *)
+  assertloc (factorial 0 = 1);
+  assertloc (factorial 1 = 1);
+  assertloc (factorial 2 = 2);
+  assertloc (factorial 3 = 6);
+  assertloc (factorial 4 = 24);
+  assertloc (factorial 5 = 120)
+(* end *))
 
 implement main0 () =
-  ((* begin *)
-    test factorial;
-    test factorial';
-    test factorial'';
-    test' (mk_factorial ())
-  (* end *))
+((* begin *)
+  test factorial;
+  test factorial';
+  test factorial'';
+  test' (mk_factorial ())
+(* end *))

@@ -23,7 +23,7 @@ fn test_templates () =
   let
     val a = id<int> 1
     val b = id<double> 3.14
-    val c = app<string, string> ("ATS", id)
+    val c = "ATS" \app<string, string> id // infix application
     val d = curry app 1 (lam (x : int) => x + 1)
     val e = uncurry (curry app) (2, (lam (x : int) => x * 2))
   in
