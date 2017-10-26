@@ -9,3 +9,4 @@ foreign
 datatype
 misc
 exn
+array
