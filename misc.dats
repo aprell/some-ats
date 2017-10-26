@@ -34,9 +34,20 @@ fn d () =
     assertloc (c = 10)
   end
 
+fn e () =
+  assertloc (c = 10)
+  where
+  {
+    fn plus (a : int, b : int) = a + b
+    val a = plus (1, 2)
+    val b = plus (3, 4)
+    val c = a \plus b
+  }
+
 val () = a ()
 val () = b ()
 val () = c ()
 val () = d ()
+val () = e ()
 
 implement main0 () = {}
