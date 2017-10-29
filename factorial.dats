@@ -50,7 +50,8 @@ fn mk_counter () =
        [cloref1] required! *)
     fn counter () :<cloref1> int =
       let val old_count = !count in
-        (!count := old_count + 1; old_count)
+        !count := old_count + 1;
+        old_count
       end
   in
     counter
