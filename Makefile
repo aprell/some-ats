@@ -16,6 +16,9 @@ all: $(PROGS)
 check: hello
 	@./$<
 
+exn: loop.dats exn.dats
+	$(PATSCC) $(PATSCCFLAGS) -o $@ $^
+
 %: %.dats
 	$(PATSCC) $(PATSCCFLAGS) -o $@ $< #-latslib
 
