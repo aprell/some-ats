@@ -50,6 +50,4 @@ fn test () =
   end
 
 implement main0 () =
-(
   test ()
-)
