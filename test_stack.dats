@@ -1,9 +1,9 @@
 #include "share/atspre_define.hats"
 #include "share/atspre_staload.hats"
 
-//staload "libats/ML/SATS/basis.sats"
-//staload "libats/ML/SATS/list0.sats"
-//staload "libats/ML/DATS/list0.dats"
+staload "libats/ML/SATS/basis.sats"
+staload "libats/ML/SATS/option0.sats"
+staload "libats/ML/DATS/option0.dats"
 
 staload Stack = "stack.sats"
 staload "stack.dats" // Required!
@@ -24,6 +24,8 @@ fn test_stack () =
     assertloc ($Stack.peek_exn<int> s3 = 3);
     assertloc ($Stack.peek_exn<int> s4 = 2);
     assertloc ($Stack.peek_exn<int> s5 = 1);
+    assertloc (option0_is_some ($Stack.peek<int> s5));
+    assertloc (option0_is_none ($Stack.peek<int> s6));
     assertloc ($Stack.empty s6);
   end
 
