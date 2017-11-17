@@ -1,6 +1,6 @@
 staload "libats/ML/SATS/basis.sats"
-//staload "libats/ML/SATS/list0.sats"
-//staload "libats/ML/DATS/list0.dats"
+staload "libats/ML/SATS/list0.sats"
+staload "libats/ML/DATS/list0.dats"
 
 staload "stack.sats"
 
@@ -33,3 +33,10 @@ implement {a} pop (xs) =
   case+ xs of
   | list0_nil () => list0_nil
   | list0_cons (_, xs) => xs
+
+implement {a} print_stack (xs) =
+(
+  print "[";
+  fprint (stdout_ref, xs, ", ");
+  print "]\n";
+)

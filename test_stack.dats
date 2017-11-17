@@ -2,6 +2,8 @@
 #include "share/atspre_staload.hats"
 
 staload "libats/ML/SATS/basis.sats"
+staload "libats/ML/SATS/list0.sats"
+staload "libats/ML/DATS/list0.dats"
 staload "libats/ML/SATS/option0.sats"
 staload "libats/ML/DATS/option0.dats"
 
@@ -27,6 +29,7 @@ fn test_stack () =
     assertloc (option0_is_some ($Stack.peek<int> s5));
     assertloc (option0_is_none ($Stack.peek<int> s6));
     assertloc ($Stack.empty s6);
+    //$Stack.print s3;
   end
 
 implement main0 () =

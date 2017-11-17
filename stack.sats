@@ -13,3 +13,6 @@ fn {a : t@ype} push (xs : stack a, x : a) : stack a
 fn {a : t@ype} peek (xs : stack a) : option0 a
 fn {a : t@ype} peek_exn (xs : stack a) : a
 fn {a : t@ype} pop (xs : stack a) : stack a
+
+fn {a : t@ype} print_stack (xs : stack a) : void
+overload print with print_stack
