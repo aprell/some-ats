@@ -7,7 +7,7 @@ PROGS := hello tuple record factorial poly foreign datatype misc \
 	exn array test_stack
 
 tuple record factorial poly datatype: PATSCCFLAGS += -DATS_MEMALLOC_LIBC
-exn array test_stack:                 PATSCCFLAGS += -DATS_MEMALLOC_LIBC
+exn array test_stack foreign:         PATSCCFLAGS += -DATS_MEMALLOC_LIBC
 
 ##############################################################################
 
