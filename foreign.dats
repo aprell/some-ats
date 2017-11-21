@@ -100,10 +100,51 @@ implement div_exn (a, b) =
   | Some q => q
   | None _ => raise DivisionByZero
 
+datatype color = Red | Green | Blue
+
+datatype expr =
+  | Const of int
+  | Add of (expr, expr)
+  | Mul of (expr, expr)
+
+extern typedef "color" = color
+extern typedef "expr" = expr
+
+%{$
+#include <stdint.h>
+
+int color_to_int(color c)
+{
+    return (int)(intptr_t)c;
+}
+
+// Assumes that the constructor tag comes first
+struct header { int tag; };
+
+int expr_to_int(expr e)
+{
+    return ((struct header *)e)->tag;
+}
+%}
+
+extern fn color_to_int (c : color) : int = "ext#"
+extern fn expr_to_int (e : expr) : int = "ext#"
+
+fn test_tag () =
+(
+    assertloc (color_to_int Red = 0);
+    assertloc (color_to_int Green = 1);
+    assertloc (color_to_int Blue = 2);
+    assertloc (expr_to_int (Const 1) = 0);
+    assertloc (expr_to_int (Add (Const 1, Const 2)) = 1);
+    assertloc (expr_to_int (Mul (Const 3, Const 4)) = 2);
+)
+
 implement main0 () =
 (
   test_ext ();
   test_mac ();
   try test_div () with
-  | ~DivisionByZero () => ()
+  | ~DivisionByZero () => ();
+  test_tag ();
 )
