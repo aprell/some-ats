@@ -98,7 +98,7 @@ implement safe_div (a, b) =
 implement div_exn (a, b) =
   case+ safe_div (a, b) of
   | Some q => q
-  | None _ => raise DivisionByZero
+  | None () => raise DivisionByZero
 
 datatype color = Red | Green | Blue
 
