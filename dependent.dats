@@ -93,6 +93,27 @@ fn isqrt
     loop (0, x)
   end
 
+fn isqrt2
+  {n : nat}
+  (x : int n) : int =
+  let
+    fun loop
+      {i, j : int | 1 <= i && i <= j + 1 && j <= n}
+      (lo : int i, hi : int j) =
+      if hi < lo then hi
+      else
+        let
+          val mid = lo + (hi - lo) / 2
+          val x = x / mid // mid can't be zero
+        in
+          if x = mid then mid
+          else if x < mid then loop (lo, mid - 1)
+          else (* x > mid *) loop (mid + 1, hi)
+        end
+  in
+    if x = 0 then 0 else loop (1, x)
+  end
+
 fn test_isqrt () =
 (
   assertloc (isqrt 0 = 0);
