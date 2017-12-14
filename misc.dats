@@ -50,4 +50,8 @@ val () = c ()
 val () = d ()
 val () = e ()
 
-implement main0 () = {}
+implement main (argc, argv) =
+  if argc > 1 then
+    (print argv[1]; print_newline (); 0)
+  else
+    (print "No arguments\n"; 0)

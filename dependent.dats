@@ -45,9 +45,67 @@ fn sgn (n : int) : [a : sgn] int a =
 
 fn silly (n : int 1) : int 42 = n + 41
 
-(* Unsolved constraint
-fun factorial (n : nat0) : nat0 =
+// .<n>. is a termination metric
+fun factorial {n : nat} .<n>. (n : int n) : int = // Why [int]?
   if n > 0 then n * factorial (n - 1) else 1
-*)
 
-implement main0 () = ()
+fn binsearch
+  {n : nat}
+  (arr : arrayref (int, n), n : int n, x : int) : int =
+  let
+    fun loop
+      {i, j : int | 0 <= i && i <= j + 1 && j < n}
+      (arr : arrayref (int, n), lo : int i, hi : int j) : int =
+      if hi < lo then ~1
+      else
+        let
+          val mid = lo + (hi - lo) / 2
+          val m = arr[mid]
+        in
+          if x = m then mid
+          else if x < m then loop (arr, lo, mid - 1)
+          else (* x > m *) loop (arr, mid + 1, hi)
+        end
+  in
+    loop (arr, 0, n - 1)
+  end
+
+// isqrt(n) = floor(sqrt(n))
+fn isqrt
+  {n : nat}
+  (x : int n) : int =
+  let
+    fun loop
+      {i, j : int | 0 <= i && i <= j + 1 && j <= n}
+      (lo : int i, hi : int j) =
+      if hi < lo then hi
+      else
+        let
+          val mid = lo + (hi - lo) / 2
+          // val x = x / mid fails type-checking; mid can be zero!
+          val m = mid * mid
+        in
+          if x = m then mid
+          else if x < m then loop (lo, mid - 1)
+          else (* x > m *) loop (mid + 1, hi)
+        end
+  in
+    loop (0, x)
+  end
+
+fn test_isqrt () =
+(
+  assertloc (isqrt 0 = 0);
+  assertloc (isqrt 1 = 1);
+  assertloc (isqrt 2 = 1);
+  assertloc (isqrt 3 = 1);
+  assertloc (isqrt 4 = 2);
+  assertloc (isqrt 5 = 2);
+  assertloc (isqrt 6 = 2);
+  assertloc (isqrt 7 = 2);
+  assertloc (isqrt 8 = 2);
+  assertloc (isqrt 9 = 3);
+)
+
+implement main0 () =
+  test_isqrt ()
