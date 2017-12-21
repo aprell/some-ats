@@ -7,9 +7,9 @@ staload "libats/ML/DATS/list0.dats"
 staload "libats/ML/SATS/option0.sats"
 staload "libats/ML/DATS/option0.dats"
 
-staload Stack = "stack.sats"
-staload "stack.dats" // Required!
-dynload "stack.dats"
+staload Stack = "./stack.sats"
+staload "./stack.dats" // Required!
+dynload "./stack.dats"
 
 fn test_stack () =
   let
