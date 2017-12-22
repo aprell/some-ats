@@ -128,5 +128,120 @@ fn test_isqrt () =
   assertloc (isqrt 9 = 3);
 )
 
+fn swap
+  {i, j, n : nat | 0 <= i && i < n; 0 <= j && j < n}
+  (arr : arrayref (int, n), i : int i, j : int j) =
+  let val tmp = arr[i] in
+    arr[i] := arr[j];
+    arr[j] := tmp
+  end
+
+(*
+fn partition
+  {n : pos}
+  (arr : arrayref (int, n), n : int n) =
+  let
+    val pivot = arr[0]
+    fun loop
+      {i, l : nat | 1 <= i && i <= n; 0 <= l && l + 1 < n}
+      (i : int i, l : int l) =
+      if i < n then
+        if arr[i] < pivot then
+          (swap (arr, i, l + 1); loop (i + 1, l + 1))
+        else loop (i + 1, l)
+      else swap (arr, 0, l)
+  in
+    loop (1, 0)
+  end
+*)
+
+// A dependent data type
+// [t@ype+] indicates covariance (not sure if it matters)
+datatype list (a : t@ype+, int) =
+  // list_nil : {a : t@ype} () -> list (a, 0)
+  | list_nil (a, 0) // of ()
+  // list_cons : {a : t@ype} {n : nat} (a, list (a, n)) -> list (a, n + 1)
+  | {n : nat} list_cons (a, n + 1) of (a, list (a, n))
+
+fn {a : t@ype}
+list_head
+  {n : pos}
+  (lst : list (a, n)) : a =
+  case+ lst of // exhaustive
+  | list_cons (hd, _) => hd
+
+fn {a : t@ype}
+list_tail
+  {n : pos}
+  (lst : list (a, n)) : list (a, n - 1) =
+  case+ lst of // exhaustive
+  | list_cons (_, tl) => tl
+
+fn {a : t@ype}
+list_length
+  {n : nat}
+  (lst : list (a, n)) : int n =
+  let
+    fun loop
+      {i, j, n : nat | i + n == j}
+      (lst : list (a, n), acc : int i) : int j =
+      case+ lst of
+      | list_nil () => acc
+      | list_cons (_, lst') => loop (lst', acc + 1)
+  in
+    loop (lst, 0)
+  end
+
+fun {a : t@ype} {b : t@ype}
+list_map
+  {n : nat}
+  (f : a -> b, lst : list (a, n)) : list (b, n) =
+  case+ lst of
+  | list_nil () => nil
+  | list_cons (hd, tl) => f hd \list_cons list_map (f, tl)
+
+fun {a : t@ype} {b : t@ype}
+list_fold_left
+  {n : nat}
+  (f : (a, b) -> a, init : a, lst : list (b, n)) : a =
+  case+ lst of
+  | list_nil () => init
+  | list_cons (hd, tl) => list_fold_left (f, f (init, hd), tl)
+
+fun {a : t@ype} {b : t@ype}
+list_fold_right
+  {n : nat}
+  (f : (a, b) -> b, lst : list (a, n), init : b) : b =
+  case+ lst of
+  | list_nil () => init
+  | list_cons (hd, tl) => f (hd, list_fold_right (f, tl, init))
+
+#define nil list_nil
+#define ::  list_cons
+
+(* Doesn't compile
+fn {a : t@ype}
+list_append
+  {n, m : nat}
+  (lst1 : list (a, n), lst2 : list (a, m)) : list (a, n + m) =
+  case+ lst1 of
+  | list_nil () => lst2
+  | list_cons (hd, tl) => hd :: list_append (tl, lst2)
+
+fn {a : t@ype}
+list_reverse_append
+  {n, m : nat}
+  (lst1 : list (a, n), lst2 : list (a, m)) : list (a, n + m) =
+  case+ lst1 of
+  | list_nil () => lst2
+  | list_cons (hd, tl) => list_reverse_append (tl, hd :: lst2)
+
+fn {a : t@ype}
+list_reverse
+  {n : nat}
+  (lst : list (a, n)) : list (a, n) =
+  list_reverse_append (lst, nil)
+*)
+
 implement main0 () =
   test_isqrt ()
