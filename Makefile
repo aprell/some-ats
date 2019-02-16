@@ -1,13 +1,24 @@
 PATSCC := patscc
-PATSCCFLAGS :=
+PATSCCFLAGS +=
 
 ##############################################################################
 
-PROGS := hello tuple record factorial poly foreign datatype misc \
-	exn array test_stack dependent
+PROGS := \
+  array \
+  datatype \
+  dependent \
+  exn \
+  factorial \
+  foreign \
+  hello \
+  misc \
+  poly \
+  record \
+  test_stack \
+  tuple
 
-tuple record factorial poly datatype: PATSCCFLAGS += -DATS_MEMALLOC_LIBC
-exn array test_stack foreign:         PATSCCFLAGS += -DATS_MEMALLOC_LIBC
+$(filter-out dependent hello misc,$(PROGS)): \
+  PATSCCFLAGS += -DATS_MEMALLOC_LIBC
 
 ##############################################################################
 
