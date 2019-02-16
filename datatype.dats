@@ -125,9 +125,38 @@ fn test_eval () =
     assertloc (eval d = 4)
   end
 
+// Generalized algebraic data types (GADTs)
+// https://bluishcoder.co.nz/2018/10/16/generalized-algebraic-data-types-in-ats.html
+datatype expr' (t@ype) =
+  | Int (int) of int
+  | Bool (bool) of bool
+  | Add (int) of (expr' int, expr' int)
+  | Eq (bool) of (expr' int, expr' int)
+
+fun {a : t@ype} eval' (e : expr' a) : a =
+  case+ e of
+  | Int n => n
+  | Bool b => b
+  | Add (e1, e2) => eval' e1 + eval' e2
+  | Eq (e1, e2) => eval' e1 = eval' e2
+
+fn test_eval' () =
+  let
+    val a = Int 1
+    val b = Bool true
+    val c = Add (a, Int 2)
+    val d = Eq (c, Add (c, Int 1))
+  in
+    assertloc (eval' a = 1);
+    assertloc (eval' b = true);
+    assertloc (eval' c = 3);
+    assertloc (eval' d = false)
+  end
+
 implement main0 () =
 (
   test_option ();
   test_list ();
-  test_eval ()
+  test_eval ();
+  test_eval' ()
 )
