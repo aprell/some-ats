@@ -57,7 +57,7 @@ fn sgn (n : int) : [a : sgn] int a =
 fn silly (n : int 1) : int 42 = n + 41
 
 // .<n>. is a termination metric
-fun factorial {n : nat} .<n>. (n : int n) : int = // Why [int]?
+fun factorial {m : nat} .<m>. (n : int m) : int = // Why [int]?
   if n > 0 then n * factorial (n - 1) else 1
 
 fn binsearch
@@ -263,17 +263,20 @@ list_reverse
   list_reverse_append (lst, nil)
 
 fn test_list () =
-(
   let
     val lst1 = 1 :: 2 :: 3 :: 4 :: 5 :: nil
     val lst2 = 6 :: 7 :: 8 :: 9 :: nil
     val lst3 = list_append (lst1, lst2)
+    val lst4 = list_reverse lst3
+    val lst5 = list_map<int> (lam x => x + 1, lst4)
   in
     assertloc (list_length lst1 = 5);
     assertloc (list_length lst2 = 4);
     assertloc (list_length lst3 = 9);
+    assertloc (list_head<int> lst4 = 9);
+    assertloc (list_head<int> (list_tail lst4) = 8);
+    assertloc (list_fold_left<int><int> (lam (a, b) => a + b, 0, lst5) = 54);
   end
-)
 
 // The type of an ordered list of integers with values <= 100
 // https://bluishcoder.co.nz/2010/09/01/dependent-types-in-ats.html
