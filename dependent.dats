@@ -24,13 +24,24 @@ fn succ {a : nat} (n : int a) : int (a + 1) = incr n
 
 fn add {a, b : nat} (n : int a, m : int b) : int (a + b) = n + m
 
+// Why is the constraint {a : int} needed here?
 fn abs {a : int} (n : int a) : nat0 =
   if n >= 0 then n else ~n
 
 (* Mismatch of static terms
-fn abs' (n : int) : nat0 =
+fn abs (n : int) : nat0 =
   if n >= 0 then n else ~n
 *)
+
+// Compiles just fine:
+fn abs' {a : int} (n : int a) : nat0 =
+  if n >= 0 then n + 2 else ~n + 1
+
+// Better:
+fn abs''
+  {a : int; b : nat | a >= 0 && b == a || a < 0 && b == ~a}
+  (n : int a) : int b =
+  if n >= 0 then n else ~n
 
 sortdef sgn = {i : int | ~1 <= i && i <= 1}
 
@@ -219,8 +230,17 @@ list_fold_right
 #define nil list_nil
 #define ::  list_cons
 
-(* Doesn't compile
-fn {a : t@ype}
+fun {a : t@ype}
+list_filter
+  {n : nat}
+  (lst : list (a, n), pred : a -> bool) : [m : nat | m <= n] list (a, m) =
+  case+ lst of
+  | list_nil () => nil
+  | list_cons (hd, tl) =>
+    if pred hd then hd :: list_filter (tl, pred)
+    else list_filter (tl, pred)
+
+fun {a : t@ype}
 list_append
   {n, m : nat}
   (lst1 : list (a, n), lst2 : list (a, m)) : list (a, n + m) =
@@ -228,7 +248,7 @@ list_append
   | list_nil () => lst2
   | list_cons (hd, tl) => hd :: list_append (tl, lst2)
 
-fn {a : t@ype}
+fun {a : t@ype}
 list_reverse_append
   {n, m : nat}
   (lst1 : list (a, n), lst2 : list (a, m)) : list (a, n + m) =
@@ -241,7 +261,22 @@ list_reverse
   {n : nat}
   (lst : list (a, n)) : list (a, n) =
   list_reverse_append (lst, nil)
-*)
+
+fn test_list () =
+(
+  let
+    val lst1 = 1 :: 2 :: 3 :: 4 :: 5 :: nil
+    val lst2 = 6 :: 7 :: 8 :: 9 :: nil
+    val lst3 = list_append (lst1, lst2)
+  in
+    assertloc (list_length lst1 = 5);
+    assertloc (list_length lst2 = 4);
+    assertloc (list_length lst3 = 9);
+  end
+)
 
 implement main0 () =
-  test_isqrt ()
+(
+  test_isqrt ();
+  test_list ()
+)

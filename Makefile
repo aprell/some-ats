@@ -17,7 +17,7 @@ PROGS := \
   test_stack \
   tuple
 
-$(filter-out dependent hello misc,$(PROGS)): \
+$(filter-out hello misc,$(PROGS)): \
   PATSCCFLAGS += -DATS_MEMALLOC_LIBC
 
 ##############################################################################
