@@ -275,6 +275,12 @@ fn test_list () =
   end
 )
 
+// The type of an ordered list of integers with values <= 100
+// https://bluishcoder.co.nz/2010/09/01/dependent-types-in-ats.html
+datatype ordered_list (int) =
+  | ordered_list_nil (100) // of ()
+  | {n, m : int | n <= m} ordered_list_cons (n) of (int n, ordered_list (m))
+
 implement main0 () =
 (
   test_isqrt ();
