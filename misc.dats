@@ -30,8 +30,13 @@ fn d () =
     val a = plus (1, 2)
     val b = plus (3, 4)
     val c = a \plus b // infix application
+
+    symintr .plus
+    overload .plus with plus
+    val d = c.plus 5 // dot application
   in
-    assertloc (c = 10)
+    assertloc (c = 10);
+    assertloc (d = 15)
   end
 
 fn e () =
