@@ -262,6 +262,15 @@ list_reverse
   (lst : list (a, n)) : list (a, n) =
   list_reverse_append (lst, nil)
 
+fun {a : t@ype} {b : t@ype}
+list_zip
+  {n : nat}
+  (lst1 : list (a, n), lst2 : list (b, n)) : list ((a, b), n) =
+  case+ (lst1, lst2) of // exhaustive
+  | (list_nil (), list_nil ()) => nil
+  | (list_cons (hd1, tl1), list_cons (hd2, tl2)) =>
+    (hd1, hd2) :: list_zip (tl1, tl2)
+
 fn test_list () =
   let
     val lst1 = 1 :: 2 :: 3 :: 4 :: 5 :: nil
@@ -282,7 +291,7 @@ fn test_list () =
 // https://bluishcoder.co.nz/2010/09/01/dependent-types-in-ats.html
 datatype ordered_list (int) =
   | ordered_list_nil (100) // of ()
-  | {n, m : int | n <= m} ordered_list_cons (n) of (int n, ordered_list (m))
+  | {n, m : int | n <= m} ordered_list_cons (n) of (int n, ordered_list m)
 
 implement main0 () =
 (
