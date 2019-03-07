@@ -1,14 +1,14 @@
 *_?ats.c
 
-hello
-tuple
-record
-factorial
-poly
-foreign
-datatype
-misc
-exn
 array
-test_stack
+datatype
 dependent
+exn
+factorial
+foreign
+hello
+misc
+poly
+record
+test_stack
+tuple

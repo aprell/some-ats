@@ -8,7 +8,7 @@ sortdef pos = {a : int | a > 0}  // Positive numbers
 sortdef neg = {a : int | a < 0}  // Negative numbers
 
 // Existential quantification:
-// "For some type n of sort nat, zero has the type int n"
+// "For some static variable n of sort nat, zero has the type int n"
 val zero : [n : nat] int n = 0
 
 typedef nat0 = [n : nat] int n
@@ -16,19 +16,19 @@ typedef nat0 = [n : nat] int n
 val one : nat0 = 1
 
 // Universal quantification:
-// "For every type a of sort int, given a value of type int a, return a value
-// of type int (a + 1)"
+// "For every static variable a of sort int, given a value of type int a,
+// return a value of type int (a + 1)"
 fn incr {a : int} (n : int a) : int (a + 1) = n + 1
 
 fn succ {a : nat} (n : int a) : int (a + 1) = incr n
 
 fn add {a, b : nat} (n : int a, m : int b) : int (a + b) = n + m
 
-// Why is the constraint {a : int} needed here?
 fn abs {a : int} (n : int a) : nat0 =
   if n >= 0 then n else ~n
 
 (* Mismatch of static terms
+   [nat0] is more specific than [int]
 fn abs (n : int) : nat0 =
   if n >= 0 then n else ~n
 *)
@@ -54,11 +54,16 @@ fn sgn (n : int) : [a : sgn] int a =
   | _ when n = 0 => 0
   | _ => ~1
 
+// [int 1] and [int 42] are singleton types (types for exactly one value)
 fn silly (n : int 1) : int 42 = n + 41
 
 // .<n>. is a termination metric
-fun factorial {m : nat} .<m>. (n : int m) : int = // Why [int]?
+fun factorial {m : nat} .<m>. (n : int m) : int =
+  // Q: Why [int] and not [nat0] as return type?
+  // A: Presence of nonlinear constraint, which cannot be solved automatically
   if n > 0 then n * factorial (n - 1) else 1
+  //            ^~~~~~~~~~~~~~~~~~~~~
+  //            n * factorial (n - 1) >= 0 ?
 
 fn binsearch
   {n : nat}
