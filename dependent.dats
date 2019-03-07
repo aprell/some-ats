@@ -57,13 +57,16 @@ fn sgn (n : int) : [a : sgn] int a =
 // [int 1] and [int 42] are singleton types (types for exactly one value)
 fn silly (n : int 1) : int 42 = n + 41
 
-// .<n>. is a termination metric
+// .<m>. is a termination metric
 fun factorial {m : nat} .<m>. (n : int m) : int =
   // Q: Why [int] and not [nat0] as return type?
   // A: Presence of nonlinear constraint, which cannot be solved automatically
   if n > 0 then n * factorial (n - 1) else 1
   //            ^~~~~~~~~~~~~~~~~~~~~
   //            n * factorial (n - 1) >= 0 ?
+
+fun fib {m : nat} (n : int m) : nat0 =
+  if n >= 2 then fib (n - 1) + fib (n - 2) else n
 
 fn binsearch
   {n : nat}
