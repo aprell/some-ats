@@ -3,11 +3,11 @@
 - [Introduction to Programming in ATS][1]
 - A (Not So Gentle) Introduction to Systems Programming in ATS
   ([YouTube][2], [GitHub][3])
+- A Tase Of ATS ([YouTube][10], [GitHub][11])
 - A [literate implementation][4] of [left-pad][5] in ATS ([GitHub][6])
 - [bluishcoder][7]
 - [blog.vmchale][8]
 - Screencasts on [YouTube][9]
-- A Tase Of ATS ([YouTube][10], [GitHub][11])
 
 [1]: http://www.ats-lang.org/Documents.html#INT2PROGINATS
 [2]: https://www.youtube.com/watch?v=zt0OQb1DBko
