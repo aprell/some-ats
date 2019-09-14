@@ -43,6 +43,12 @@ fn abs''
   (n : int a) : int b =
   if n >= 0 then n else ~n
 
+// Another implementation mismatch that goes unnoticed
+fn greater_than (a : int, b : int) : bool = a >= b
+
+// With a more precise specification, the code above fails to compile
+fn greater_than' {i, j : int} (a: int i, b: int j) : bool (i > j) = a > b
+
 sortdef sgn = {i : int | ~1 <= i && i <= 1}
 
 // Note that [int] is overloaded:
