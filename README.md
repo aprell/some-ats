@@ -7,6 +7,7 @@
 - [bluishcoder][7]
 - [blog.vmchale][8]
 - Screencasts on [YouTube][9]
+- A Tase Of ATS ([YouTube][10], [GitHub][11])
 
 [1]: http://www.ats-lang.org/Documents.html#INT2PROGINATS
 [2]: https://www.youtube.com/watch?v=zt0OQb1DBko
@@ -17,3 +18,5 @@
 [7]: https://bluishcoder.co.nz/tags/ats/index.html
 [8]: http://blog.vmchale.com/category/ATS
 [9]: https://www.youtube.com/channel/UCYOrtZYEV1hAtvZDcrL277Q
+[10]: https://www.youtube.com/watch?v=ADN6B1Wk5Ts
+[11]: https://github.com/deech/ComposeTalk2019
