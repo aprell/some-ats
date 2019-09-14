@@ -72,15 +72,29 @@ fun factorial {m : nat} .<m>. (n : int m) : int =
   //            n * factorial (n - 1) >= 0 ?
 
 fun fib {m : nat} (n : int m) : nat0 =
+  // No nonlinear constraint here
   if n >= 2 then fib (n - 1) + fib (n - 2) else n
+
+fn string_length {n : nat} (s : string n) : nat0 =
+  let
+    fun loop {i : nat | i <= n} (s : string n, i : int i) : nat0 =
+      if string_is_atend (s, i) then i else loop (s, i + 1)
+  in
+    loop (s, 0)
+  end
+
+val () = assertloc (string_length "" = 0)
+val () = assertloc (string_length "ATS" = 3)
+
+typedef nat0_or_minus1 = [i : int | i >= 0 || i == ~1] int i
 
 fn binsearch
   {n : nat}
-  (arr : arrayref (int, n), n : int n, x : int) : int =
+  (arr : arrayref (int, n), n : int n, x : int) : nat0_or_minus1 =
   let
     fun loop
       {i, j : int | 0 <= i && i <= j + 1 && j < n}
-      (arr : arrayref (int, n), lo : int i, hi : int j) : int =
+      (arr : arrayref (int, n), lo : int i, hi : int j) : nat0_or_minus1 =
       if hi < lo then ~1
       else
         let
@@ -94,6 +108,14 @@ fn binsearch
   in
     loop (arr, 0, n - 1)
   end
+
+(*
+fn test_binsearch () =
+  let val a = array_make_elt<int> (5, int) in
+    a[0] = 3;
+    a[1] = 1
+  end
+*)
 
 // isqrt(n) = floor(sqrt(n))
 fn isqrt
