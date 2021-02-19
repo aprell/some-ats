@@ -1,6 +1,13 @@
 PATSCC := patscc
 PATSCCFLAGS += -D_GNU_SOURCE
 
+# https://github.com/sparverius/ats-acc
+ifneq ($(shell which acc),)
+  ATSCC := acc pc
+else
+  ATSCC := $(PATSCC)
+endif
+
 ##############################################################################
 
 PROGS := \
@@ -28,13 +35,13 @@ check: hello
 	@./$<
 
 exn: loop.dats exn.dats
-	$(PATSCC) $(PATSCCFLAGS) -o $@ $^
+	$(ATSCC) $(PATSCCFLAGS) -o $@ $^
 
 test_stack: stack.dats test_stack.dats
-	$(PATSCC) $(PATSCCFLAGS) -o $@ $^
+	$(ATSCC) $(PATSCCFLAGS) -o $@ $^
 
 %: %.dats
-	$(PATSCC) $(PATSCCFLAGS) -o $@ $< #-latslib
+	$(ATSCC) $(PATSCCFLAGS) -o $@ $< #-latslib
 
 clean:
 	rm -f *_?ats.c $(PROGS)
