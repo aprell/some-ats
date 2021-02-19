@@ -49,6 +49,8 @@ fn greater_than (a : int, b : int) : bool = a >= b
 // With a more precise specification, the code above fails to compile
 fn greater_than' {i, j : int} (a: int i, b: int j) : bool (i > j) = a > b
 
+fn inverse {x : int | x != 2} (x : int x) = 1 / (x - 2)
+
 sortdef sgn = {i : int | ~1 <= i && i <= 1}
 
 // Note that [int] is overloaded:
@@ -85,37 +87,6 @@ fn string_length {n : nat} (s : string n) : nat0 =
 
 val () = assertloc (string_length "" = 0)
 val () = assertloc (string_length "ATS" = 3)
-
-typedef nat0_or_minus1 = [i : int | i >= 0 || i == ~1] int i
-
-fn binsearch
-  {n : nat}
-  (arr : arrayref (int, n), n : int n, x : int) : nat0_or_minus1 =
-  let
-    fun loop
-      {i, j : int | 0 <= i && i <= j + 1 && j < n}
-      (arr : arrayref (int, n), lo : int i, hi : int j) : nat0_or_minus1 =
-      if hi < lo then ~1
-      else
-        let
-          val mid = lo + (hi - lo) / 2
-          val m = arr[mid]
-        in
-          if x = m then mid
-          else if x < m then loop (arr, lo, mid - 1)
-          else (* x > m *) loop (arr, mid + 1, hi)
-        end
-  in
-    loop (arr, 0, n - 1)
-  end
-
-(*
-fn test_binsearch () =
-  let val a = array_make_elt<int> (5, int) in
-    a[0] = 3;
-    a[1] = 1
-  end
-*)
 
 // isqrt(n) = floor(sqrt(n))
 fn isqrt
@@ -175,12 +146,81 @@ fn test_isqrt () =
   assertloc (isqrt 9 = 3);
 )
 
+typedef nat0_or_minus1 = [i : int | i >= 0 || i == ~1] int i
+
+fn binsearch
+  {n : nat}
+  (arr : arrayref (int, n), n : int n, x : int) : nat0_or_minus1 =
+  let
+    fun loop
+      {i, j : int | 0 <= i && i <= j + 1 && j < n}
+      (arr : arrayref (int, n), lo : int i, hi : int j) : nat0_or_minus1 =
+      if hi < lo then ~1
+      else
+        let
+          val mid = lo + (hi - lo) / 2
+          val m = arr[mid]
+        in
+          if x = m then mid
+          else if x < m then loop (arr, lo, mid - 1)
+          else (* x > m *) loop (arr, mid + 1, hi)
+        end
+  in
+    loop (arr, 0, n - 1)
+  end
+
+implement array_tabulate$fopr<int> i = sz2i (i + 1)
+
+fn test_binsearch () =
+  let
+    val n = 10
+    val a = arrayref_tabulate<int> (i2sz n)
+  in
+    // fprint_arrayref (stdout_ref, a, (i2sz n));
+    // fprint_newline stdout_ref;
+    assertloc (binsearch (a, n,  1) =  0);
+    assertloc (binsearch (a, n,  7) =  6);
+    assertloc (binsearch (a, n, 10) =  9);
+    assertloc (binsearch (a, n,  0) = ~1);
+    // assertloc (a[binsearch (a, n, 1)] = 1)
+    // Error: unsolved constraint
+  end
+
 fn swap
   {i, j, n : nat | 0 <= i && i < n; 0 <= j && j < n}
   (arr : arrayref (int, n), i : int i, j : int j) =
   let val tmp = arr[i] in
     arr[i] := arr[j];
     arr[j] := tmp
+  end
+
+fn reverse
+  {n : pos}
+  (arr : arrayref (int, n), n : int n) =
+  let
+    fun loop
+      {i, j : nat | 0 <= i && i <= j + 1 && j < n}
+      (i : int i, j : int j) =
+      if i < j then (
+        swap (arr, i, j);
+        loop (i + 1, j - 1)
+      )
+  in
+    loop (0, n - 1)
+  end
+
+fn test_reverse () =
+  let
+    val n = 10
+    val a = arrayref_tabulate<int> (i2sz n)
+  in
+    reverse (a, n);
+    // fprint_arrayref (stdout_ref, a, (i2sz n));
+    // fprint_newline stdout_ref;
+    assertloc (a[0] = 10);
+    assertloc (a[2] =  8);
+    assertloc (a[5] =  5);
+    assertloc (a[9] =  1)
   end
 
 (*
@@ -332,5 +372,7 @@ datatype ordered_list (int) =
 implement main0 () =
 (
   test_isqrt ();
+  test_binsearch ();
+  test_reverse ();
   test_list ()
 )
