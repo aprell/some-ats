@@ -133,12 +133,12 @@ datatype expr' (t@ype) =
   | Add (int) of (expr' int, expr' int)
   | Eq (bool) of (expr' int, expr' int)
 
-fun {a : t@ype} eval' (e : expr' a) : a =
+fun {a : t@ype} eval_ (e : expr' a) : a =
   case+ e of
   | Int n => n
   | Bool b => b
-  | Add (e1, e2) => eval' e1 + eval' e2
-  | Eq (e1, e2) => eval' e1 = eval' e2
+  | Add (e1, e2) => eval_ e1 + eval_ e2
+  | Eq (e1, e2) => eval_ e1 = eval_ e2
 
 fn test_eval' () =
   let
@@ -147,10 +147,10 @@ fn test_eval' () =
     val c = Add (a, Int 2)
     val d = Eq (c, Add (c, Int 1))
   in
-    assertloc (eval' a = 1);
-    assertloc (eval' b = true);
-    assertloc (eval' c = 3);
-    assertloc (eval' d = false)
+    assertloc (eval_ a = 1);
+    assertloc (eval_ b = true);
+    assertloc (eval_ c = 3);
+    assertloc (eval_ d = false)
   end
 
 implement main0 () =
