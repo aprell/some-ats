@@ -8,6 +8,9 @@
 - [bluishcoder][7]
 - [blog.vmchale][8]
 - Screencasts on [YouTube][9]
+- [A pretty-printing wrapper for the ATS compiler][12]
+- [ML Programmer's Guide to ATS][13]
+- [Learn ATS in INTMAX Minutes][14]
 
 [1]: http://www.ats-lang.org/Documents.html#INT2PROGINATS
 [2]: https://www.youtube.com/watch?v=zt0OQb1DBko
@@ -20,3 +23,6 @@
 [9]: https://www.youtube.com/channel/UCYOrtZYEV1hAtvZDcrL277Q
 [10]: https://www.youtube.com/watch?v=ADN6B1Wk5Ts
 [11]: https://github.com/deech/ComposeTalk2019
+[12]: https://github.com/sparverius/ats-acc
+[13]: https://cs.likai.org/ats/ml-programmers-guide-to-ats
+[14]: https://github.com/mb64/learnxinyminutes-docs/blob/ats/ATS.html.markdown
