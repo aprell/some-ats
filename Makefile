@@ -1,5 +1,5 @@
 PATSCC := patscc
-PATSCCFLAGS +=
+PATSCCFLAGS += -D_GNU_SOURCE
 
 ##############################################################################
 
