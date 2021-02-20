@@ -223,24 +223,23 @@ fn test_reverse () =
     assertloc (a[9] =  1)
   end
 
-(*
 fn partition
   {n : pos}
   (arr : arrayref (int, n), n : int n) =
   let
     val pivot = arr[0]
     fun loop
-      {i, l : nat | 1 <= i && i <= n; 0 <= l && l + 1 < n}
+      {i, l : nat | 1 <= i && i <= n; 0 <= l && l < i}
       (i : int i, l : int l) =
       if i < n then
-        if arr[i] < pivot then
-          (swap (arr, i, l + 1); loop (i + 1, l + 1))
-        else loop (i + 1, l)
+        if arr[i] < pivot then (
+          swap (arr, i, l + 1);
+          loop (i + 1, l + 1)
+        ) else loop (i + 1, l)
       else swap (arr, 0, l)
   in
     loop (1, 0)
   end
-*)
 
 // A dependent data type
 // [t@ype+] indicates covariance (not sure if it matters)
