@@ -146,15 +146,21 @@ fn test_isqrt () =
   assertloc (isqrt 9 = 3);
 )
 
-typedef nat0_or_minus1 = [i : int | i >= 0 || i == ~1] int i
+typedef nat0_bounded (n : int) =
+  [i : nat | i < n] int i
+
+typedef nat0_bounded_or_minus1 (n : int) =
+  [i : int | 0 <= i && i < n || i == ~1] int i
 
 fn binsearch
   {n : nat}
-  (arr : arrayref (int, n), n : int n, x : int) : nat0_or_minus1 =
+  (arr : arrayref (int, n), n : int n, x : int)
+  : nat0_bounded_or_minus1 n =
   let
     fun loop
       {i, j : int | 0 <= i && i <= j + 1 && j < n}
-      (arr : arrayref (int, n), lo : int i, hi : int j) : nat0_or_minus1 =
+      (arr : arrayref (int, n), lo : int i, hi : int j)
+      : nat0_bounded_or_minus1 n =
       if hi < lo then ~1
       else
         let
@@ -225,18 +231,20 @@ fn test_reverse () =
 
 fn partition
   {n : pos}
-  (arr : arrayref (int, n), n : int n) =
+  (arr : arrayref (int, n), n : int n)
+  : nat0_bounded n =
   let
     val pivot = arr[0]
     fun loop
       {i, l : nat | 1 <= i && i <= n; 0 <= l && l < i}
-      (i : int i, l : int l) =
+      (i : int i, l : int l)
+      : nat0_bounded n =
       if i < n then
         if arr[i] < pivot then (
           swap (arr, i, l + 1);
           loop (i + 1, l + 1)
         ) else loop (i + 1, l)
-      else swap (arr, 0, l)
+      else (swap (arr, 0, l); l)
   in
     loop (1, 0)
   end
