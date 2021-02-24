@@ -14,6 +14,7 @@ PROGS := \
   array \
   datatype \
   dependent \
+  effects \
   exn \
   factorial \
   foreign \
@@ -24,7 +25,7 @@ PROGS := \
   test_stack \
   tuple
 
-$(filter-out hello misc,$(PROGS)): \
+$(filter-out hello effects misc,$(PROGS)): \
   PATSCCFLAGS += -DATS_MEMALLOC_LIBC
 
 ##############################################################################

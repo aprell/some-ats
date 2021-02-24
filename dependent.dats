@@ -65,8 +65,8 @@ fn sgn (n : int) : [a : sgn] int a =
 // [int 1] and [int 42] are singleton types (types for exactly one value)
 fn silly (n : int 1) : int 42 = n + 41
 
-// .<m>. is a termination metric
-fun factorial {m : nat} .<m>. (n : int m) : int =
+// .<n>. is a termination metric
+fun factorial {n : nat} .<n>. (n : int n) : int =
   // Q: Why [int] and not [nat0] as return type?
   // A: Presence of nonlinear constraint, which cannot be solved automatically
   if n > 0 then n * factorial (n - 1) else 1
@@ -146,9 +146,11 @@ fn test_isqrt () =
   assertloc (isqrt 9 = 3);
 )
 
+// nat0_bounded : int -> type
 typedef nat0_bounded (n : int) =
   [i : nat | i < n] int i
 
+// nat0_bounded_or_minus1 : int -> type
 typedef nat0_bounded_or_minus1 (n : int) =
   [i : int | 0 <= i && i < n || i == ~1] int i
 

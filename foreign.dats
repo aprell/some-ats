@@ -86,8 +86,8 @@ void test_div(void)
 
 exception DivisionByZero
 
-extern fn safe_div (a : int, b : int) : option_int = "ext#"
-extern fn div_exn (a : int, b : int) : int = "ext#"
+extern fn safe_div (a : int, b : int) :<fun0> option_int = "ext#"
+extern fn div_exn (a : int, b : int) :<!exn> int = "ext#"
 extern fn test_div () : void = "ext#"
 
 (*

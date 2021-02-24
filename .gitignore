@@ -3,6 +3,7 @@
 array
 datatype
 dependent
+effects
 exn
 factorial
 foreign
