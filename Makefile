@@ -21,11 +21,12 @@ PROGS := \
   hello \
   misc \
   poly \
+  proof \
   record \
   test_stack \
   tuple
 
-$(filter-out hello effects misc,$(PROGS)): \
+$(filter-out hello effects misc proof,$(PROGS)): \
   PATSCCFLAGS += -DATS_MEMALLOC_LIBC
 
 ##############################################################################
