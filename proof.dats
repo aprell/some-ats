@@ -90,8 +90,17 @@ fn beautiful_add
   : [c : nat] (BEAUTIFUL c | int c) =
   (B_SUM (pf1, pf2) | a + b)
 
-prval pf1 = five_is_beautiful ()
-prval pf2 = eight_is_beautiful ()
-val (_ | n) = beautiful_add (pf1, pf2 | 5, 8)
+extern fn assert_beautiful (n : int) : [n : nat] (BEAUTIFUL n | int n)
 
-implement main0 () = ()
+fn test_beautiful () =
+  let
+    prval pf1 = five_is_beautiful ()
+    prval pf2 = eight_is_beautiful ()
+    val (_ | n) = beautiful_add (pf1, pf2 | 5, 8)
+    //   ^~~~~~ A proof that 13 is a beautiful number
+  in
+    assertloc (n = 13)
+  end
+
+implement main0 () =
+  test_beautiful ()
