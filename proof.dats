@@ -114,6 +114,7 @@ fun fact
   if n > 0 then
     let val (pf | f) = fact (n - 1) in
       (FACT_N pf | n * f)
+//    ^~~~~~~~~~~~~~~~~~~ Can't prove that n * f > 0
     end
   else
     (FACT_0 | 1)
@@ -128,10 +129,10 @@ dataprop FIB (int, int) =
 fun fib
   {n : nat} .<n>. (n : int n)
   :<fun0> [f : nat] (FIB (n, f) | int f) =
-  case- n of
-  | 0 => (FIB_0 | 0)
-  | 1 => (FIB_1 | 1)
-  | n when n > 1 =>
+  ifcase
+  | n = 0 => (FIB_0 | 0)
+  | n = 1 => (FIB_1 | 1)
+  | _ =>
     let
       val (pf1 | f1) = fib (n - 1)
       val (pf2 | f2) = fib (n - 2)
