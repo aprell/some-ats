@@ -49,7 +49,7 @@ extern praxi mul_neg_2 {m, n, p : int} (MUL (m, n, p)) : MUL(m, ~n, ~p)
 
 // Beautiful numbers
 // https://bluishcoder.co.nz/2013/07/01/constructing-proofs-with-dataprop-in-ats.html
-dataprop BEAUTIFUL (n : int) =
+dataprop BEAUTIFUL (int) =
   | B_0 (0)
   | B_3 (3)
   | B_5 (5)
@@ -101,6 +101,46 @@ fn test_beautiful () =
   in
     assertloc (n = 13)
   end
+
+dataprop FACT (int, int) =
+  | FACT_0 (0, 1)
+  | {n, f : pos}
+    FACT_N (n, n * f) of FACT (n - 1, f)
+
+(*
+fun fact
+  {n : nat} .<n>. (n : int n)
+  :<fun0> [f : pos] (FACT (n, f) | int f) =
+  if n > 0 then
+    let val (pf | f) = fact (n - 1) in
+      (FACT_N pf | n * f)
+    end
+  else
+    (FACT_0 | 1)
+*)
+
+dataprop FIB (int, int) =
+  | FIB_0 (0, 0)
+  | FIB_1 (1, 1)
+  | {n : nat | n > 1} {f1, f2 : nat}
+    FIB_N (n, f1 + f2) of (FIB (n - 1, f1), FIB(n - 2, f2))
+
+fun fib
+  {n : nat} .<n>. (n : int n)
+  :<fun0> [f : nat] (FIB (n, f) | int f) =
+  case- n of
+  | 0 => (FIB_0 | 0)
+  | 1 => (FIB_1 | 1)
+  | n when n > 1 =>
+    let
+      val (pf1 | f1) = fib (n - 1)
+      val (pf2 | f2) = fib (n - 2)
+    in
+      (FIB_N (pf1, pf2) | f1 + f2)
+    end
+
+val (_ | n) = fib 20
+val () = assertloc (n = 6765)
 
 implement main0 () =
   test_beautiful ()
