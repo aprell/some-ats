@@ -120,6 +120,24 @@ fun fact
     (FACT_0 | 1)
 *)
 
+(*
+fn fact'
+  {n : nat} (n : int n)
+  : [f : pos] (FACT (n, f) | int f) =
+  let
+    fun loop
+      {f : pos} {i : nat | i <= n}
+      (pf : FACT(i, f) | n : int n, f : int f, i : int i)
+      : [f1 : pos] (FACT (n, f1) | int f1) =
+      if n - i > 0 then
+        loop (FACT_N pf | n, (i + 1) * f, i + 1)
+      else
+        (pf | f)
+  in
+    loop (FACT_0 | n, 1, 0)
+  end
+*)
+
 dataprop FIB (int, int) =
   | FIB_0 (0, 0)
   | FIB_1 (1, 1)
