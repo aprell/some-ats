@@ -104,31 +104,27 @@ fn test_beautiful () =
 
 dataprop FACT (int, int) =
   | FACT_0 (0, 1)
-  | {n, f : pos}
+  | {n : pos} {f : int}
     FACT_N (n, n * f) of FACT (n - 1, f)
 
-(*
 fun fact
   {n : nat} .<n>. (n : int n)
-  :<fun0> [f : pos] (FACT (n, f) | int f) =
+  :<fun0> [f : int] (FACT (n, f) | int f) =
   if n > 0 then
     let val (pf | f) = fact (n - 1) in
       (FACT_N pf | n * f)
-//    ^~~~~~~~~~~~~~~~~~~ Can't prove that n * f > 0
     end
   else
     (FACT_0 | 1)
-*)
 
-(*
-fn fact'
+fn fact' // tail-recursive
   {n : nat} (n : int n)
-  : [f : pos] (FACT (n, f) | int f) =
+  : [f : int] (FACT (n, f) | int f) =
   let
     fun loop
-      {f : pos} {i : nat | i <= n}
+      {f : int} {i : nat | i <= n}
       (pf : FACT(i, f) | n : int n, f : int f, i : int i)
-      : [f1 : pos] (FACT (n, f1) | int f1) =
+      : [f1 : int] (FACT (n, f1) | int f1) =
       if n - i > 0 then
         loop (FACT_N pf | n, (i + 1) * f, i + 1)
       else
@@ -136,7 +132,6 @@ fn fact'
   in
     loop (FACT_0 | n, 1, 0)
   end
-*)
 
 dataprop FIB (int, int) =
   | FIB_0 (0, 0)

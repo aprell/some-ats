@@ -356,6 +356,19 @@ list_zip
   | (list_cons (hd1, tl1), list_cons (hd2, tl2)) =>
     (hd1, hd2) :: list_zip (tl1, tl2)
 
+fun {a : t@ype}
+list_concat
+  {n, m : nat}
+  // Presence of nonlinear constraint requires proving
+  (lst : list (list (a, n), m)) // : list (a, m * n)
+  : [p : nat] (MUL (m, n, p) | list (a, p)) =
+  case+ lst of
+  | list_nil () => (MULbas | nil)
+  | list_cons (hd, tl) =>
+    let val (pf | tl) = list_concat tl in
+      (MULind pf | list_append (hd, tl))
+    end
+
 fn test_list () =
   let
     val lst1 = 1 :: 2 :: 3 :: 4 :: 5 :: nil
