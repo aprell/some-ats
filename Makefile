@@ -19,6 +19,7 @@ PROGS := \
   factorial \
   foreign \
   hello \
+  linear \
   misc \
   poly \
   proof \
@@ -26,7 +27,7 @@ PROGS := \
   test_stack \
   tuple
 
-$(filter-out hello effects misc proof,$(PROGS)): \
+$(filter-out hello effects linear misc proof,$(PROGS)): \
   PATSCCFLAGS += -DATS_MEMALLOC_LIBC
 
 ##############################################################################
