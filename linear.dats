@@ -70,4 +70,19 @@ swap1'
     !p1 := !p2; !p2 := tmp
   end
 
+// fn {a : t@ype} deref {l : addr} (p : ptr l): a = !p
+// Error: dereference cannot be performed
+
+// fn {a : t@ype} deref {l : addr} (pf : a @ l | p : ptr l): a = !p
+// Error: proof needs to be consumed
+
+fn {a : t@ype} deref {l : addr} (pf : a @ l | p : ptr l) : (a @ l | a) =
+  let val v = !p in (pf | v) end
+
+// Combining values with linear proofs => viewtypes
+viewtypedef vtptr (a : t@ype, l : addr) = (a @ l | ptr l)
+
+fn {a : t@ype} deref' {l : addr} (p : vtptr (a, l)) : (a @ l | a) =
+  let val v = !(p.1) in (p.0 | v) end
+
 implement main0 () = ()
