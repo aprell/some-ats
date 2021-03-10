@@ -91,19 +91,37 @@ fn inc0
   {l : addr}
   // Proof is not consumed (!count0 l >> count0 l)
   (c : !count0 l)
-  : int =
-  let val n = !(c.1) in
-    !(c.1) := n + 1; n
-  end
+  : int = n where {
+    val p = c.1
+    val n = !p
+    val () = !p := n + 1
+  }
 
 viewtypedef count1 (n : int, l : addr) = (int n @ l | ptr l)
 
 fn inc1
   {n : int} {l : addr}
   (c : !count1 (n, l) >> count1 (n + 1, l))
-  : int n =
-  let val n = !(c.1) in
-    !(c.1) := n + 1; n
-  end
+  : int n = n where {
+    val p = c.1
+    val n = !p
+    val () = !p := n + 1
+  }
+
+fn {a : t@ype} id (x : a) = x
+
+fn {a : t@ype} drop (x : a) = ()
+
+fn {a : t@ype} dup (x : a) = (x, x)
+
+fn {a : viewt@ype} id_v (x : a) = x
+
+// fn {a : viewt@ype} drop_v (x : a) = ()
+//                           ^^^^^^^^^^^^
+// Error: linear variable needs to be consumed
+
+// fn {a : viewt@ype} dup_v (x : a) = (x, x)
+//                                        ^
+// Error: linear variable is no longer available
 
 implement main0 () = ()
