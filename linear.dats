@@ -77,12 +77,33 @@ swap1'
 // Error: proof needs to be consumed
 
 fn {a : t@ype} deref {l : addr} (pf : a @ l | p : ptr l) : (a @ l | a) =
-  let val v = !p in (pf | v) end
+  let val x = !p in (pf | x) end
 
-// Combining values with linear proofs => viewtypes
+// Combining views and types => viewtypes
 viewtypedef vtptr (a : t@ype, l : addr) = (a @ l | ptr l)
 
 fn {a : t@ype} deref' {l : addr} (p : vtptr (a, l)) : (a @ l | a) =
-  let val v = !(p.1) in (p.0 | v) end
+  let val x = !(p.1) in (p.0 | x) end
+
+viewtypedef count0 (l : addr) = (int @ l | ptr l)
+
+fn inc0
+  {l : addr}
+  // Proof is not consumed (!count0 l >> count0 l)
+  (c : !count0 l)
+  : int =
+  let val n = !(c.1) in
+    !(c.1) := n + 1; n
+  end
+
+viewtypedef count1 (n : int, l : addr) = (int n @ l | ptr l)
+
+fn inc1
+  {n : int} {l : addr}
+  (c : !count1 (n, l) >> count1 (n + 1, l))
+  : int n =
+  let val n = !(c.1) in
+    !(c.1) := n + 1; n
+  end
 
 implement main0 () = ()
