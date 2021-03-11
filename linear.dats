@@ -71,21 +71,23 @@ swap1'
   end
 
 // fn {a : t@ype} deref {l : addr} (p : ptr l): a = !p
+//                                                  ^^
 // Error: dereference cannot be performed
 
 // fn {a : t@ype} deref {l : addr} (pf : a @ l | p : ptr l): a = !p
+//                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // Error: proof needs to be consumed
 
 fn {a : t@ype} deref {l : addr} (pf : a @ l | p : ptr l) : (a @ l | a) =
   let val x = !p in (pf | x) end
 
 // Combining views and types => viewtypes
-viewtypedef vtptr (a : t@ype, l : addr) = (a @ l | ptr l)
+viewtypedef ptr_vt (a : t@ype, l : addr) = (a @ l | ptr l)
 
-fn {a : t@ype} deref' {l : addr} (p : vtptr (a, l)) : (a @ l | a) =
+fn {a : t@ype} deref' {l : addr} (p : ptr_vt (a, l)) : (a @ l | a) =
   let val x = !(p.1) in (p.0 | x) end
 
-viewtypedef count0 (l : addr) = (int @ l | ptr l)
+viewtypedef count0 (l : addr) = ptr_vt (int, l)
 
 fn inc0
   {l : addr}
@@ -97,7 +99,7 @@ fn inc0
     val () = !p := n + 1
   }
 
-viewtypedef count1 (n : int, l : addr) = (int n @ l | ptr l)
+viewtypedef count1 (n : int, l : addr) = ptr_vt (int n, l)
 
 fn inc1
   {n : int} {l : addr}
@@ -107,6 +109,23 @@ fn inc1
     val n = !p
     val () = !p := n + 1
   }
+
+// Call by reference
+fn inc (n : &int) : void = () where {
+  val () = n := n + 1
+}
+
+fn test_stack_alloc () =
+  let
+    // Stack allocation
+    var x : int      // (view@ x | addr @x) == (int? @ x | ptr x)
+    var y : int = 42 // (view@ y | addr @y) == (int 42 @ y | ptr y)
+    val () = inc y
+    val (pf | z) = deref (view@ y | addr@ y)
+    prval () = view@ y := pf // "viewat-restoration"?
+  in
+    assertloc ((z : int) = 43)
+  end
 
 fn {a : t@ype} id (x : a) = x
 
@@ -124,4 +143,5 @@ fn {a : viewt@ype} id_v (x : a) = x
 //                                        ^
 // Error: linear variable is no longer available
 
-implement main0 () = ()
+implement main0 () =
+  test_stack_alloc ()
