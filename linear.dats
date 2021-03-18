@@ -60,15 +60,16 @@ fn {a : t@ype}
 swap1'
   {l1, l2 : addr}
   (vw1 : !a @ l1, vw2 : !a @ l2 | p1 : ptr l1, p2 : ptr l2)
-  : void =
-  // Let p : ptr L and pf be a proof of T@L
-  // (1) val x = !p
-  //     => val x = ptr_get1<T> (pf | p)
-  // (2) !p := x
-  //     => val () = ptr_set1<T> (pf | p, x)
-  let val tmp = !p1 in
-    !p1 := !p2; !p2 := tmp
-  end
+  : void = () where {
+    // Let p : ptr L and pf be a proof of T@L
+    // (1) val x = !p
+    //     => val x = ptr_get1<T> (pf | p)
+    // (2) !p := x
+    //     => val () = ptr_set1<T> (pf | p, x)
+    val tmp = !p1
+    val () = !p1 := !p2
+    val () = !p2 := tmp
+  }
 
 // fn {a : t@ype} deref {l : addr} (p : ptr l): a = !p
 //                                                  ^^
@@ -118,13 +119,46 @@ fn inc (n : &int) : void = () where {
 fn test_stack_alloc () =
   let
     // Stack allocation
-    var x : int      // (view@ x | addr @x) == (int? @ x | ptr x)
-    var y : int = 42 // (view@ y | addr @y) == (int 42 @ y | ptr y)
+    var x : int      // (view@ x | addr@ x) == (int? @ x | ptr x)
+    var y : int = 42 // (view@ y | addr@ y) == (int 42 @ y | ptr y)
+
+    val p : ptr_vt (int, y) = (view@ y | addr@ y)
     val () = inc y
-    val (pf | z) = deref (view@ y | addr@ y)
-    prval () = view@ y := pf // "viewat-restoration"?
+    val (pf | z) = deref' p
+    prval () = view@ y := pf // "viewat-restoration"
   in
     assertloc ((z : int) = 43)
+  end
+
+fn test_count0 () =
+  let
+    var x : int = 1
+    val c : count0 x = (view@ x | addr@ x)
+    val _ = inc0 c
+    val _ = inc0 c
+    val y = inc0 c
+    prval () = view@ x := c.0
+  in
+    assertloc (y = 3)
+  end
+
+fn test_count1 () =
+  let
+    var x : int = 1
+    val c : count1 (1, x) = (view@ x | addr@ x)
+    val _ = inc1 c
+    val _ = inc1 c
+    val y = inc1 c
+    prval () = view@ x := c.0
+
+    val c : count1 (4, x) = (view@ x | addr@ x)
+    val _ = inc1 c
+    val _ = inc1 c
+    val z = inc1 c
+    prval () = view@ x := c.0
+  in
+    assertloc (y = 3);
+    assertloc (z = 6)
   end
 
 fn {a : t@ype} id (x : a) = x
@@ -144,4 +178,8 @@ fn {a : viewt@ype} id_v (x : a) = x
 // Error: linear variable is no longer available
 
 implement main0 () =
-  test_stack_alloc ()
+(
+  test_stack_alloc ();
+  test_count0 ();
+  test_count1 ();
+)
