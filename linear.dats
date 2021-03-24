@@ -122,12 +122,16 @@ fn test_stack_alloc () =
     var x : int      // (view@ x | addr@ x) == (int? @ x | ptr x)
     var y : int = 42 // (view@ y | addr@ y) == (int 42 @ y | ptr y)
 
-    val p : ptr_vt (int, y) = (view@ y | addr@ y)
     val () = inc y
-    val (pf | z) = deref' p
+    val (pf | z) = deref<int> (view@ y | addr@ y)
+
+    val () = inc y
+    val (pf | z') = deref'<int> ((pf | addr@ y) : ptr_vt (int, y))
+
     prval () = view@ y := pf // "viewat-restoration"
   in
-    assertloc ((z : int) = 43)
+    assertloc (z = 43);
+    assertloc (z' = 44)
   end
 
 fn test_count0 () =
