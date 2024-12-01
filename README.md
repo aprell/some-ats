@@ -25,4 +25,4 @@
 [11]: https://github.com/deech/ComposeTalk2019
 [12]: https://github.com/sparverius/ats-acc
 [13]: https://cs.likai.org/ats/ml-programmers-guide-to-ats
-[14]: https://github.com/mb64/learnxinyminutes-docs/blob/ats/ATS.html.markdown
+[14]: https://learnxinyminutes.com/docs/ats
